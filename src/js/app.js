@@ -6,7 +6,7 @@ angular.module('app', ['ngRoute','ngMaterial', 'ngMessages'])
 	$routeProvider.
       when('/main', {
         templateUrl: 'partials/main.html',
-        controller: 'ExempleController'
+        controller: 'AppController'
       }).
       otherwise({
         redirectTo: '/main'

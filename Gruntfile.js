@@ -67,6 +67,8 @@ module.exports = function(grunt) {
 			dev: {
 				options: {
 					port: 9000,
+					hostname: '0.0.0.0',
+				    livereload: 35729,
 					base: {
 						path: 'src',
 						options: {
@@ -147,5 +149,11 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['connect:dev', 'open:dev', 'watch:client']);
 	grunt.registerTask('watch-dist', ['connect:dist', 'open:dist', 'watch:client']);
 	grunt.registerTask('dist', ['less', 'uglify', 'bower_concat', 'cssmin', 'copy', 'processhtml']);
+	grunt.registerTask('heroku', ['connect:dev', 'open:dev', 'watch:client']);
+
+	grunt.registerTask('default', [
+		'heroku'
+	//, 'coveralls'
+	]);
 
 };

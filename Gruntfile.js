@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
 
     // Project configuration.
+    grunt.loadNpmTasks('grunt-build-control');
+    var pkg = require('./package.json');
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		uglify: {
@@ -107,7 +109,27 @@ module.exports = function(grunt) {
 					livereload: true
 				}
 			}
-		}
+		},
+		buildcontrol: {
+	      options: {
+	        dir: 'dist',
+	        commit: true,
+	        push: true,
+	        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+	      },
+	      pages: {
+	        options: {
+	          remote: 'git@github.com:shrey230195/xlsx-merger.git',
+	          branch: 'gh-pages'
+	        }
+	      },
+	      local: {
+	        options: {
+	          remote: '../',
+	          branch: 'build'
+	        }
+	      }
+	    }
 	});
 
 	// Load the plugin that provides the "uglify" task.

@@ -24,5 +24,8 @@
     "angular",
     "grunt"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "grunt-build-control": "^0.7.1"
+  }
 }

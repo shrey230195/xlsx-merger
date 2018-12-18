@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 			},
 			my_target: {
 				files: {
-					'dist/js/app.min.js': ['src/js/main.js', 'src/js/services/**/*.js','src/js/directives/**/*.js', 'src/js/controllers/**/*.js'],
+					'dist/js/app.min.js': ['src/js/**/*.js']
 				}
 			}
 		},
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 		processhtml: {
 			dist: {
 				files: {
-					'dist/index.html': ['src/**/*.html']
+					'dist/index.html': ['src/index.html','src/partials/*.html']
 				}
 			}
 		},

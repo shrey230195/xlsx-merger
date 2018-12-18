@@ -1,1 +1,1 @@
-web: grunt --force
+web: grunt serve

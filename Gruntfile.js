@@ -1,159 +1,129 @@
+'use strict';
+
 module.exports = function(grunt) {
 
-    // Project configuration.
-    grunt.loadNpmTasks('grunt-build-control');
-    var pkg = require('./package.json');
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-		uglify: {
-			options: {
-				mangle: false
-			},
-			my_target: {
-				files: {
-					'dist/js/app.min.js': ['src/js/**/*.js']
-				}
-			}
-		},
-		bower_concat: {
-			all: {
-				dest: 'dist/js/dependencies.js',
-				cssDest: 'dist/css/dependencies.css',
-			}
-		},
-		cssmin: {
-			options: {
-				shorthandCompacting: false,
-				roundingPrecision: -1
-			},
-			target: {
-				files: {
-					'dist/css/app.min.css': ['src/css/*.css']
-				}
-			}
-		},
-		processhtml: {
-			dist: {
-				files: {
-					'dist/index.html': ['src/index.html','src/partials/*.html']
-				}
-			}
-		},
-		copy: {
-			main: {
-				files: [
-					{expand: true, flatten: true, src: ['src/partials/*', 'src/img/*', 'src/fonts/*'], dest: 'dist/partials', filter: 'isFile'},
-					{expand: true, flatten: true, src: ['src/css/bootstrap.min.css'], dest: 'dist/css', filter: 'isFile'}
-				],
-			},
-		},
-		less: {
-			development: {   
-				options: {
-					paths: ['src/less']
-				},
-				// target name
-				files: [{
-					// no need for files, the config below should work
-					expand: true,
-					cwd:    'src/less',
-					src:    "*.less",
-					dest: 'src/css',
-					ext:    ".css"
-				}]
-			}
-		},
-		connect: {
-			dev: {
-				options: {
-					port: 9000,
-					hostname: '0.0.0.0',
-				    livereload: 35729,
-					base: {
-						path: 'src',
-						options: {
-							index: 'index.html',
-							maxAge: 300000
-						}
-					}
-				}
-			},
-			dist: {
-				options: {
-					port: 8000,
-					base: {
-						path: 'dist',
-						options: {
-							index: 'index.html',
-							maxAge: 300000
-						}
-					}
-				}
-			}
-		},
-		open : {
-			dev : {
-				path: 'http://localhost:9000',
-				app: 'chrome'
-			},
-			dist : {
-				path: 'http://localhost:8000',
-				app: 'chrome'
-			}
-		},
-		watch: {
-			client: {
-				// '**' is used to include all subdirectories
-				// and subdirectories of subdirectories, and so on, recursively.
-				files: ['src/**/*'],
-				tasks:['less', 'bower_concat', 'cssmin', 'copy', 'processhtml'],
-				options: {
-					livereload: true
-				}
-			}
-		},
-		buildcontrol: {
-	      options: {
-	        dir: 'src',
-	        commit: true,
-	        push: true,
-	        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-	      },
-	      pages: {
-	        options: {
-	          remote: 'git@github.com:shrey230195/xlsx-merger.git',
-	          branch: 'gh-pages'
-	        }
-	      },
-	      local: {
-	        options: {
-	          remote: '../',
-	          branch: 'build'
-	        }
-	      }
-	    }
-	});
+	var moduleName = 'angular-scroll-animate';
 
-	// Load the plugin that provides the "uglify" task.
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-bower-concat');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-processhtml');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-open');
+	var beautifyFiles = ['!Gruntfile.js', '!npm-shrinkwrap.json', 'src/**/*.{html,js}', '!app/bower_components/**/*'];
 
-	// Default task(s).
-	grunt.registerTask('default', ['connect:dev', 'open:dev', 'watch:client']);
-	grunt.registerTask('watch-dist', ['connect:dist', 'open:dist', 'watch:client']);
-	grunt.registerTask('dist', ['less', 'uglify', 'bower_concat', 'cssmin', 'copy', 'processhtml']);
-	grunt.registerTask('heroku', ['connect:dev', 'open:dev', 'watch:client']);
+	// Load grunt tasks automatically
+  require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('default', [
-		'heroku'
-	//, 'coveralls'
-	]);
+  // Define the configuration for all the tasks
+  grunt.initConfig({
 
+    connect: {
+             server: {
+               options: {
+                 port: process.env.PORT || 5000
+               }
+             }
+    },
+
+    watch: {
+           scripts: {
+                    files: ['src/**/*'],
+                    tasks: ['beautify', 'build'],
+                    options: {
+                             spawn: false
+                    }
+           }
+
+    },
+
+    clean: ['dist/', 'docs/'],
+
+    concat: {
+      dist: {
+        // Replace all 'use strict' statements in the code with a single one at the top
+        options: {
+
+          banner: "'use strict';\nangular.module('" + moduleName + "', []);",
+          process: function(src, filepath) {
+            return '// Source: ' + filepath + '\n' +
+            src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
+          }
+        },
+        src: ['src/*.js'],
+        dest: 'dist/app.js'
+      }
+    },
+
+	  ngdocs: {
+
+		  options: {
+			  scripts: [
+				  'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js',
+				  //'http://localhost:9000/bower_components/angular.js',
+			            '../dist/app.js'],
+		    dest: 'docs',
+		    html5Mode: false,
+		    title: 'xlsx-merger',
+			  startPage: '/api'
+		  },
+		  api: {
+		  	 src: ['dist/**/*.js'],
+		  	 title: 'API'
+		  }
+	  },
+
+	  // verifies we have formatted our js and HTML according to our style conventions
+	  jsbeautifier: {
+		  verify : {
+			  src:   beautifyFiles,
+			  options: {
+				  config: '.jsbeautifyrc',
+				  mode: 'VERIFY_ONLY'
+			  }
+		  },
+		  update: {
+			  src:   beautifyFiles,
+			  options: {
+				  config: '.jsbeautifyrc'
+			  }
+		  }
+	  },
+
+    // Make sure code styles are up to par and there are no obvious mistakes
+    jshint:       {
+      options: {
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
+      },
+      src:     ['src/!(*spec).js']
+    },
+
+    // Test settings
+    karma:        {
+      unit: {
+        options:    {
+          logLevel: 'DEBUG'
+        },
+        browsers:   ['PhantomJS'],
+        configFile: 'karma.conf.js',
+        singleRun:  true,
+        autoWatch:  false
+      }
+    },
+    coveralls: {
+      options: {
+        coverage_dir:'coverage',
+        directory:'coverage/PhantomJS 1.9.7 (Mac OS X)/lcov.info',
+        debug: true,
+        dryRun: false,
+        recursive: false
+      }
+    }
+  });
+
+  grunt.registerTask('serve', ['heroku','connect', 'watch']);
+	grunt.registerTask('beautify', ['jsbeautifier:update']);
+  grunt.registerTask('heroku', [
+    'clean', 'jsbeautifier:verify', 'jshint', 'concat', 'ngdocs' //'karma'
+  ]);
+
+  grunt.registerTask('default', [
+    'heroku'
+    //, 'coveralls'
+  ]);
 };

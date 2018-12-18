@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/shrey230195/whatsapp-analyser-frontend.git"
   },
-  "main": "./dist/angular-scroll-animate.js",
+  "main": "./dist/app.js",
   "keywords": [
     "angular",
     "directive",

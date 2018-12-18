@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html ng-app="app">
+<head>
+  <title>SheetJS + AngularJS + ui-grid</title>
+  <!-- Angular -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
+
+  <!-- ui-grid -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-grid/4.0.0/ui-grid.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-grid/4.0.0/ui-grid.css"/>
+
+  <!-- SheetJS js-xlsx library -->
+  <script src="shim.js"></script>
+  <script src="xlsx.full.min.js"></script>
+
+  <!-- SheetJS Service -->
+  <script src="SheetJS-angular.js"></script>
+
+<style>
+.grid1 {
+  width: 500px;
+  height: 400px;
+};
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS + AngularJS demo</a></b>
+
+The core library can be used as-is in AngularJS applications.
+The <a href="https://github.com/sheetjs/js-xlsx">Community Edition README</a> details some common use cases.
+We also have some <a href="http://sheetjs.com/demos/">more public demos</a>
+
+This demo shows:
+- SheetJSExportService: a service for exporting data from a ui-grid
+- SheetJSImportDirective: a directive providing a file input button for import
+
+<a href="https://obamawhitehouse.archives.gov/sites/default/files/omb/budget/fy2014/assets/receipts.xls">Sample Spreadsheet</a>
+</pre>
+
+<div ng-controller="MainCtrl">
+  <input type="file" import-sheet-js="" opts="gridOptions" multiple="false"  />
+  <div id="grid1" ui-grid="gridOptions" ui-grid-selection ui-grid-exporter class="grid"></div>
+</div>
+
+<script src="app.js"></script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36810333-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html ng-app="sjs">
+<head>
+  <title>SheetJS + AngularJS</title>
+  <!-- Angular -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+  <!-- SheetJS js-xlsx library -->
+  <script src="shim.js"></script>
+  <script src="xlsx.full.min.js"></script>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS + AngularJS demo</a></b>
+
+The core library can be used as-is in AngularJS applications.
+The <a href="https://github.com/sheetjs/js-xlsx">Community Edition README</a> details some common use cases.
+We also have some <a href="http://sheetjs.com/demos/">more public demos</a>
+
+This demo shows:
+- $http request for XLSX file and scope update with data
+- HTML table using ng-repeat
+- XLSX table export using `XLSX.utils.table_to_book`
+
+<a href="https://sheetjs.com/pres.xlsx">Sample Spreadsheet</a>
+</pre>
+
+<div ng-controller="sheetjs">
+
+<table id="sjs-table">
+  <tr><th>Name</th><th>Index</th></tr>
+  <tr ng-repeat="row in data">
+    <td>{{row.Name}}</td>
+    <td>{{row.Index}}</td>
+  </tr>
+</table>
+
+<button id="exportbtn">Export Table</button>
+
+</div>
+
+<script>
+var app = angular.module('sjs', []);
+app.controller('sheetjs', function($scope, $http) {
+  $http({
+    method:'GET',
+    url:'https://sheetjs.com/pres.xlsx',
+    responseType:'arraybuffer'
+  }).then(function(data) {
+    var wb = XLSX.read(data.data, {type:"array"});
+    var d = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    $scope.data = d;
+  }, function(err) { console.log(err); });
+});
+exportbtn.addEventListener('click', function() {
+  var wb = XLSX.utils.table_to_book(document.getElementById('sjs-table'));
+  XLSX.writeFile(wb, "export.xlsx");
+});
+</script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36810333-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html lang="en">
+<head>
+	<title>SheetJS + Angular 2+</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS + Angular 2+ demo</a></b>
+
+The core library can be used as-is in angular applications.
+The <a href="https://github.com/sheetjs/js-xlsx">Community Edition README</a> details some common use cases.
+We also have some <a href="http://sheetjs.com/demos/">more public demos</a>
+
+This demo shows `SheetJSComponent` which provides:
+- File input button with an event handler to parse the workbook
+- `data` property: array of arrays
+- Simple angular table which binds to the `data` property
+- `export` function that exports the `data` property to a new file.
+
+<a href="https://obamawhitehouse.archives.gov/sites/default/files/omb/budget/fy2014/assets/receipts.xls">Sample Spreadsheet</a>
+</pre>
+
+<app-root></app-root>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="browserify.min.js"></script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<title>SheetJS Chrome Extension Export Test</title>
+<meta charset="utf-8" />
+</head>
+<body>
+<!-- SheetJS js-xlsx library -->
+<script type="text/javascript" src="xlsx.full.min.js"></script>
+
+<button type="button" id="sjsdownload">Export Bookmarks</button>
+<a><div id="sjsversion">Version</div></a>
+
+<script type="text/javascript" src="popup.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Firebase Dump Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<h3><a href="//sheetjs.com/">SheetJS</a> Firebase Dump Demo</h3>
+<b>Example Code</b>
+
+  /* ... connect to firebase */
+  const database = firebase.database();
+
+  /* import workbook */
+  await database.ref('foo').set(workbook);
+
+  /* change cells */
+  database.ref('foo').update({
+    "Sheets/Sheet1/A1": {"t": "s", "v": "J"},
+    "Sheets/Sheet1/A2": {"t": "n", "v": 5},
+  });
+
+  /* export snapshot */
+  const val = await database.ref('foo').once('value').val();
+  XLSX.writeFile(wb, "firebase.xlsx");
+
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+<script>
+const Firebase = firebase;
+const config = {
+  credential: {
+    getAccessToken: () => ({
+      expires_in: 0,
+      access_token: '',
+    }),
+  },
+  databaseURL: 'ws://localhost:5555'
+};
+
+/* make new workbook object from CSV */
+const wb = XLSX.read('a,b,c\n1,2,3', {type:"binary"});
+
+let P = Promise.resolve("sheetjs");
+
+/* Connect to Firebase server and initialize collection */
+P = P.then(async () => {
+  Firebase.initializeApp(config);
+  const database = Firebase.database();
+  await database.ref('foo').set(null);
+  return [database];
+});
+
+/* Insert entire workbook object into `foo` ref */
+P = P.then(async ([database]) => {
+  await database.ref('foo').set(wb);
+  return [database];
+});
+
+/* Change cell A1 of Sheet1 to "J" and change A2 to 5 */
+P = P.then(async ([database]) => {
+  database.ref('foo').update({
+    "Sheets/Sheet1/A1": {"t": "s", "v": "J"},
+    "Sheets/Sheet1/A2": {"t": "n", "v": 5},
+  });
+  return [database];
+});
+
+/* Write to file */
+P = P.then(async ([database]) => {
+  const val = await database.ref('foo').once('value');
+  const wb = await val.val();
+  XLSX.writeFile(wb, "firebase.xlsx");
+  console.log(csv);
+  return [database];
+});
+
+/* Close connection */
+P = P.then(async ([database]) => { database.app.delete(); });
+
+</script>
+</body>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS LocalStorage Demo</a></b>
+<pre id="data_">
+Original Data:
+</pre>
+<pre id="out">
+Output:
+
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script src="ObjUtils.js"></script>
+<script src="https://unpkg.com/localforage/dist/localforage.min.js"></script>
+<script src="SheetJSForage.js"></script>
+<script>
+/* eslint-env browser */
+/*global XLSX, localforage */
+var data = {
+  "title": "SheetDB",
+  "metadata": {
+    "author": "SheetJS",
+    "code": 7262
+  },
+  "data": [
+    { "Name": "Barack Obama", "Index": 44 },
+    { "Name": "Donald Trump", "Index": 45 },
+  ]
+};
+document.getElementById("data_").innerText += JSON.stringify(data, 2, 2);
+
+localforage.setDriver(localforage.INDEXEDDB);
+(async function() {
+  await localforage.clear();
+
+  await localforage.load(data);
+  var wb = await localforage.dump();
+  console.log(wb);
+
+  var OUT = document.getElementById("out");
+  wb.SheetNames.forEach(function(n, i) {
+    OUT.innerText += "Sheet " + i + " (" + n + ")\n";
+    OUT.innerText += XLSX.utils.sheet_to_csv(wb.Sheets[n]);
+    OUT.innerText += "\n";
+  });
+})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS LocalStorage Demo</a></b>
+<pre id="data_">
+Original Data:
+</pre>
+<pre id="out">
+Output:
+
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script src="ObjUtils.js"></script>
+<script src="SheetJSStorage.js"></script>
+<script>
+/* eslint-env browser */
+/*global XLSX */
+var data = {
+  "title": "SheetDB",
+  "metadata": {
+    "author": "SheetJS",
+    "code": 7262
+  },
+  "data": [
+    { "Name": "Barack Obama", "Index": 44 },
+    { "Name": "Donald Trump", "Index": 45 },
+  ]
+};
+document.getElementById("data_").innerText += JSON.stringify(data, 2, 2);
+
+(function() {
+  localStorage.clear();
+
+  localStorage.load(data);
+  var wb = localStorage.dump();
+  console.log(wb);
+
+  var OUT = document.getElementById("out");
+  wb.SheetNames.forEach(function(n, i) {
+    OUT.innerText += "Sheet " + i + " (" + n + ")\n";
+    OUT.innerText += XLSX.utils.sheet_to_csv(wb.Sheets[n]);
+    OUT.innerText += "\n";
+  });
+})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS + canvas-datagrid Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+
+<a href="https://github.com/TonyGermaneri/canvas-datagrid">canvas-datagrid component library</a>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<b>Advanced Demo Options:</b>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<p><input type="submit" value="Export to XLSX!" id="xport" onclick="export_xlsx();" disabled="true"></p>
+<div id="htmlout"></div>
+<br />
+<script src="https://unpkg.com/canvas-datagrid/dist/canvas-datagrid.js"></script>
+<script src="shim.js"></script>
+<script src="xlsx.full.min.js"></script>
+<script>
+/*jshint browser:true */
+/* eslint-env browser */
+/* eslint no-use-before-define:0 */
+/*global Uint8Array, Uint16Array, ArrayBuffer */
+/*global XLSX */
+var X = XLSX;
+
+var cDg;
+
+var process_wb = (function() {
+	var XPORT = document.getElementById('xport');
+	var HTMLOUT = document.getElementById('htmlout');
+
+	return function process_wb(wb) {
+		/* get data */
+		var ws = wb.Sheets[wb.SheetNames[0]];
+		var data = XLSX.utils.sheet_to_json(ws, {header:1});
+
+		/* update canvas-datagrid */
+		if(!cDg) cDg = canvasDatagrid({ parentNode:HTMLOUT, data:data });
+		cDg.style.height = '100%';
+		cDg.style.width = '100%';
+		cDg.data = data;
+		XPORT.disabled = false;
+
+		/* create schema (for A,B,C column headings) */
+		var range = XLSX.utils.decode_range(ws['!ref']);
+		for(var i = range.s.c; i <= range.e.c; ++i) cDg.schema[i - range.s.c].title = XLSX.utils.encode_col(i);
+
+		HTMLOUT.style.height = (window.innerHeight - 400) + "px";
+		HTMLOUT.style.width = (window.innerWidth - 50) + "px";
+
+		if(typeof console !== 'undefined') console.log("output", new Date());
+	};
+})();
+
+var do_file = (function() {
+	var rABS = typeof FileReader !== "undefined" && (FileReader.prototype||{}).readAsBinaryString;
+	var domrabs = document.getElementsByName("userabs")[0];
+	if(!rABS) domrabs.disabled = !(domrabs.checked = false);
+
+	return function do_file(files) {
+		rABS = domrabs.checked;
+		var f = files[0];
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			if(typeof console !== 'undefined') console.log("onload", new Date(), rABS);
+			var data = e.target.result;
+			if(!rABS) data = new Uint8Array(data);
+			process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+		};
+		if(rABS) reader.readAsBinaryString(f);
+		else reader.readAsArrayBuffer(f);
+	};
+})();
+
+(function() {
+	var drop = document.getElementById('drop');
+	if(!drop.addEventListener) return;
+
+	function handleDrop(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		do_file(e.dataTransfer.files);
+	}
+
+	function handleDragover(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}
+
+	drop.addEventListener('dragenter', handleDragover, false);
+	drop.addEventListener('dragover', handleDragover, false);
+	drop.addEventListener('drop', handleDrop, false);
+})();
+
+(function() {
+	var xlf = document.getElementById('xlf');
+	if(!xlf.addEventListener) return;
+	function handleFile(e) { do_file(e.target.files); }
+	xlf.addEventListener('change', handleFile, false);
+})();
+
+var export_xlsx = (function() {
+	function prep(arr) {
+		var out = [];
+		for(var i = 0; i < arr.length; ++i) {
+			if(!arr[i]) continue;
+			if(Array.isArray(arr[i])) { out[i] = arr[i]; continue };
+			var o = new Array();
+			Object.keys(arr[i]).forEach(function(k) { o[+k] = arr[i][k] });
+			out[i] = o;
+		}
+		return out;
+	}
+
+	return function export_xlsx() {
+		if(!cDg) return;
+		/* convert canvas-datagrid data to worksheet */
+		var new_ws = XLSX.utils.aoa_to_sheet(prep(cDg.data));
+
+		/* build workbook */
+		var new_wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(new_wb, new_ws, 'SheetJS');
+
+		/* write file and trigger a download */
+		XLSX.writeFile(new_wb, 'sheetjs.xlsx', {bookSST:true});
+	};
+})();
+</script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Electron Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Electron Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br />
+<button id="readf">Click here to select a file from your computer</button><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+</pre>
+<p><input type="submit" value="Export Data!" id="xport" onclick="export_xlsx();" disabled="true"></p>
+<div id="htmlout"></div>
+<br />
+<script src="index.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS FuseBox Test</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS FuseBox Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+
+Original script: <a href="sheetjs.ts">sheetjs.ts</a>
+
+<b>Console Output:</b>
+</pre>
+<pre id="console"></pre>
+<b>
+<script>
+if(typeof console !== "undefined") console = {};
+console.__log = console.log || function(){};
+console.log = function(x) {
+    console.__log.apply(console, arguments);
+    document.getElementById('console').innerText += x + "\n";
+};
+console.error = console.debug = console.info =  console.log
+</script>
+<script  type="text/javascript" src="/client.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html ng-app="sjs">
+<head>
+  <title>SheetJS + KnockoutJS</title>
+  <!-- KnockoutJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+
+  <!-- SheetJS js-xlsx library -->
+  <script src="shim.js"></script>
+  <script src="xlsx.full.min.js"></script>
+</head>
+<body>
+<pre>
+<b><a href="https://sheetjs.com">SheetJS + KnockoutJS demo</a></b>
+
+The core library can be used as-is in KnockoutJS applications.
+The <a href="https://github.com/sheetjs/js-xlsx">Community Edition README</a> details some common use cases.
+We also have some <a href="http://sheetjs.com/demos/">more public demos</a>
+
+This demo shows:
+- view model backed by an array of arrays
+- file import that refreshes the model
+- table of editable `input` elements that are bound to the model
+- file export based on the model
+
+<a href="https://sheetjs.com/pres.xlsx">Sample Spreadsheet</a>
+</pre>
+
+<input name="xlfile" id="xlf"  class="left" style="width: 200px;" type="file">
+<table data-bind="foreach: aoa">
+    <tr data-bind="foreach: $data">
+      <td><input data-bind="value: $parent[$index()]"/></td>
+    </tr>
+</table>
+<script id='aoa' type="text/html"></script>
+<button id="export">Export Sheet to XLSX</button>
+
+</div>
+
+<script>
+/* knockout setup */
+var ViewModel = function() {
+  /* use an array of arrays */
+  this.aoa = ko.observableArray([
+    [1,2],
+    [3,4]
+  ]);
+};
+
+var model = new ViewModel();
+ko.applyBindings(model);
+/* do an update to confirm KO was loaded properly */
+model.aoa([[1,2,3],[4,5,6]]);
+model.aoa.push([7,8,9]);
+
+/* set up file input handler */
+(function() {
+  var input_dom_element = document.getElementById('xlf');
+  var rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
+  function handleFile(e) {
+    var files = e.target.files, f = files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var data = e.target.result;
+      if(!rABS) data = new Uint8Array(data);
+      var workbook = XLSX.read(data, {type: rABS ? 'binary' : 'array'});
+      process_wb(workbook);
+    };
+    if(rABS) reader.readAsBinaryString(f); else reader.readAsArrayBuffer(f);
+  }
+  input_dom_element.addEventListener('change', handleFile, false);
+})();
+
+/* update model */
+function process_wb(wb) {
+  /* pull first worksheet */
+  var ws = wb.Sheets[wb.SheetNames[0]];
+  /* convert to AOA */
+  var aoa = XLSX.utils.sheet_to_json(ws, {header:1});
+  /* update model */
+  model.aoa(aoa);
+}
+
+document.getElementById("export").onclick = function() {
+  /* get array of arrays */
+  var data = model.aoa();
+  /* convert to worksheet */
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  /* build new workbook */
+  var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  /* write file */
+  XLSX.writeFile(wb, "knockout.xlsx")
+};
+</script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36810333-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>
+
+<head>
+	<title>meteor-xlsx</title>
+</head>
+
+<body>
+<pre>
+<b><a href="//sheetjs.com">SheetJS Meteor Demo</a></b>
+
+{{> sheetjs}}
+
+</pre>
+</body>
+
+<template name="sheetjs">
+	<label for="upload">Parse File: </label><input type="file" id="upload" />
+	<div id="out"></div>
+	<button id="dnload" disabled="true">Generate Worksheet</button>
+</template>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS NW.js Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS NW.js Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+</pre>
+<p><input type="submit" value="Export Data!" id="xport" onclick="export_xlsx();" disabled="true"></p>
+<div id="htmlout"></div>
+<br />
+<script src="xlsx.full.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<title>SheetJS JS-XLSX In-Browser HTML Table Demo</title>
+<meta charset="utf-8" />
+<style>
+.xport, .btn {
+	display: inline;
+	text-align:center;
+}
+a { text-decoration: none }
+#data-table, #data-table th, #data-table td { border: 1px solid black }
+</style>
+</head>
+<body>
+<!-- SheetJS js-xlsx library -->
+<script type="text/javascript" src="shim.min.js"></script>
+<script type="text/javascript" src="xlsx.full.min.js"></script>
+
+<!-- Downloadify Flash fallback for IE 9 and below if ActiveX is unavailable -->
+<!--[if lte IE 9]>
+<script type="text/javascript" src="swfobject.js"></script>
+<script type="text/javascript" src="downloadify.min.js"></script>
+<script type="text/javascript" src="base64.min.js"></script>
+<![endif]-->
+
+<script>
+function doit(type, fn, dl) {
+	var elt = document.getElementById('data-table');
+	var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+	return dl ?
+		XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+		XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx')));
+}
+</script>
+<pre>
+<h3><a href="//sheetjs.com/">SheetJS</a> JS-XLSX In-Browser HTML Table Demo</h3>
+<b>Compatibility notes:</b>
+- Editable table leverages the HTML5 contenteditable feature, supported in most browsers.
+- IE6-9 requires ActiveX to upload files and ActiveX or Flash to download files.
+- iOS Safari file download may not work. <a href="http://git.io/ios_save">This is a known issue</a>.
+
+<b>Update Spreadsheet:</b> (submit file to update table; file parsed in browser)
+<input type="file" id="file" />
+
+<b>Editable Data Table:</b> (click a cell to edit it)
+</pre>
+<div id="container"></div>
+<script type="text/javascript">
+/* initial table */
+var aoa = [
+	["This",   "is",     "a",    "Test"],
+	["வணக்கம்", "สวัสดี", "你好", "가지마"],
+	[1,        2,        3,      4],
+	["Click",  "to",     "edit", "cells"]
+];
+var ws = XLSX.utils.aoa_to_sheet(aoa);
+var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
+document.getElementById("container").innerHTML = html_string;
+</script>
+<br />
+<pre><b>Export it!</b></pre>
+<table id="xport">
+<tr><td><pre>XLSX Excel 2007+ XML</pre></td><td>
+	<p id="xportxlsx" class="xport"><input type="submit" value="Export to XLSX!" onclick="doit('xlsx');"></p>
+	<p id="xlsxbtn" class="btn">Flash required for actually downloading the generated file.</p>
+</td></tr>
+<tr><td><pre>XLSB Excel 2007+ Binary</pre></td><td>
+	<p id="xportxlsb" class="xport"><input type="submit" value="Export to XLSB!" onclick="doit('xlsb');"></p>
+	<p id="xlsbbtn" class="btn">Flash required for actually downloading the generated file.</p>
+</td></tr>
+<tr><td><pre>XLS Excel 97-2004 Binary</pre></td><td>
+	<p id="xportbiff8" class="xport"><input type="submit" value="Export to XLS!"  onclick="doit('biff8', 'test.xls');"></p>
+	<p id="biff8btn" class="btn">Flash required for actually downloading the generated file.</p>
+</td></tr>
+<tr><td><pre>ODS</pre></td><td>
+	<p id="xportods" class="xport"><input type="submit" value="Export to ODS!"  onclick="doit('ods');"></p>
+	<p id="odsbtn" class="btn">Flash required for actually downloading the generated file.</p>
+</td></tr>
+<tr><td><pre>Flat ODS</pre></td><td>
+	<p id="xportfods" class="xport"><input type="submit" value="Export to FODS!"  onclick="doit('fods', 'test.fods');"></p>
+	<p id="fodsbtn" class="btn">Flash required for actually downloading the generated file.</p>
+</td></tr>
+</table>
+<pre><b>Powered by the <a href="//sheetjs.com/opensource">community version of js-xlsx</a></b></pre>
+<script type="text/javascript">
+var input_dom_element = document.getElementById("file");
+function process_wb(wb) {
+	var ws = wb.Sheets[wb.SheetNames[0]];
+	var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
+	document.getElementById("container").innerHTML = html_string;
+}
+function handle_ie() {
+	var path = input_dom_element.value;
+	var data = IE_LoadFile(path);
+	var wb = XLSX.read(data, {type:'binary'});
+	process_wb(wb);
+}
+function handle_fr(e) {
+	var files = e.target.files, f = files[0];
+	var reader = new FileReader();
+	var rABS = !!reader.readAsBinaryString;
+	reader.onload = function(e) {
+		var data = e.target.result;
+		if(!rABS) data = new Uint8Array(data);
+		var wb = XLSX.read(data, {type: rABS ? 'binary' : 'array'});
+		process_wb(wb);
+	};
+	if(rABS) reader.readAsBinaryString(f); else reader.readAsArrayBuffer(f);
+}
+var handler = typeof IE_LoadFile !== 'undefined' ? handle_ie : handle_fr;
+if(input_dom_element.attachEvent) input_dom_element.attachEvent('onchange', handler);
+else input_dom_element.addEventListener('change', handler, false);
+
+function tableau(pid, iid, fmt, ofile) {
+	if(typeof Downloadify !== 'undefined') Downloadify.create(pid,{
+			swf: 'downloadify.swf',
+			downloadImage: 'download.png',
+			width: 100,
+			height: 30,
+			filename: ofile, data: function() { return doit(fmt, ofile, true); },
+			transparent: false,
+			append: false,
+			dataType: 'base64',
+			onComplete: function(){ alert('Your File Has Been Saved!'); },
+			onCancel: function(){ alert('You have cancelled the saving of this file.'); },
+			onError: function(){ alert('You must put something in the File Contents or there will be nothing to save!'); }
+	}); else document.getElementById(pid).innerHTML = "";
+}
+tableau('biff8btn', 'xportbiff8', 'biff8', 'test.xls');
+tableau('odsbtn',   'xportods',   'ods',   'test.ods');
+tableau('fodsbtn',  'xportfods',  'fods',  'test.fods');
+tableau('xlsbbtn',  'xportxlsb',  'xlsb',  'test.xlsb');
+tableau('xlsxbtn',  'xportxlsx',  'xlsx',  'test.xlsx');
+
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36810333-1']);
+  _gaq.push(['_setDomainName', 'sheetjs.com']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="./index.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html lang="en" style="height: 100%">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS React Demo</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
+<script src="node_modules/xlsx/dist/shim.min.js"></script>
+<script src="node_modules/xlsx/dist/xlsx.full.min.js"></script>
+<style>body, #app { height: 100%; };</style>
+</head>
+<body>
+<div class="container-fluid">
+<h1><a href="http://sheetjs.com">SheetJS React Demo</a></h1>
+<br />
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a><br />
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a><br /><br />
+</div>
+<div id="app" class="container-fluid"></div>
+<script type="text/babel" src="sheetjs.jsx"></script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+<script type="text/babel">
+	ReactDOM.render( <SheetJSApp />, document.getElementById('app') );
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html lang="en" style="height: 100%">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Preact Demo</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="//unpkg.com/preact"></script>
+<script src="//unpkg.com/proptypes"></script>
+<script src="//unpkg.com/preact-compat"></script>
+<script>var React = preactCompat, ReactDOM = preactCompat;</script>
+<script src="node_modules/xlsx/dist/shim.min.js"></script>
+<script src="node_modules/xlsx/dist/xlsx.full.min.js"></script>
+<style>body, #app { height: 100%; };</style>
+</head>
+<body>
+<div class="container-fluid">
+<h1><a href="http://sheetjs.com">SheetJS Preact Demo</a></h1>
+<br />
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a><br />
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a><br /><br />
+</div>
+<div id="app" class="container-fluid"></div>
+<script type="text/babel" src="sheetjs.jsx"></script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+<script type="text/babel">
+	ReactDOM.render( <SheetJSApp />, document.getElementById('app') );
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './xlsxworker.js'
+};
+</script>
+<script src="require.js"></script>
+<script>
+require.config({
+	baseUrl: ".",
+	name: "app",
+	paths: {
+		xlsx: "xlsx.full.min"
+	}
+});
+</script>
+<script src="app.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './xlsxworker.js'
+};
+</script>
+<script src="app-built.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './worker.js'
+};
+</script>
+<script src="rollup.min.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS SystemJS Test</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS SystemJS Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+
+Original script: <a href="main.simple.js">main.simple.js</a>
+
+<b>Console Output:</b>
+</pre>
+<pre id="console"></pre>
+<b>
+<script>
+if(typeof console !== "undefined") console = {};
+console.__log = console.log || function(){};
+console.log = function(x) {
+    console.__log.apply(console, arguments);
+    document.getElementById('console').innerText += x + "\n";
+};
+console.error = console.debug = console.info =  console.log
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.16/system.js"></script>
+<script>
+SystemJS.config({
+	meta: {
+		'xlsx': {
+			exports: 'XLSX' // <-- tell SystemJS to expose the XLSX variable
+		}
+	},
+	map: {
+		'xlsx': 'xlsx.full.min.js', // <-- make sure xlsx.full.min.js is in same dir
+		'fs': '',     // <--|
+		'crypto': '', // <--| suppress native node modules
+		'stream': ''  // <--|
+	}
+});
+SystemJS.import('main.simple.js');
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.16/system.js"></script>
+<script>
+	SystemJS.config({
+		meta: {
+			'xlsx': {
+				exports: 'XLSX'
+			}
+		},
+		map: {
+			'xlsx': 'xlsx.full.min.js',
+			'fs': '',
+			'crypto': '',
+			'stream': ''
+		}
+	});
+  SystemJS.import('main.js');
+</script>
+<script type="text/javascript">
+/* eslint no-use-before-define:0 */
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<script src="dist/browser.js"></script>
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+	<title>SheetJS + VueJS2</title>
+	<!-- Vue 2 -->
+	<script src="https://unpkg.com/vue@2.x"></script>
+
+	<!-- Various shims -->
+	<script src="shim.js"></script>
+
+	<!-- SheetJS js-xlsx library -->
+	<script src="xlsx.full.min.js"></script>
+
+	<!-- SheetJS Vue components -->
+	<script src="SheetJS-vue.js"></script>
+
+<style>
+.grid1 {
+	width: 500px;
+	height: 400px;
+};
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS + VueJS2 demo</a></b>
+
+The core library can be used as-is in Vue applications.
+The <a href="https://github.com/sheetjs/js-xlsx">Community Edition README</a> details some common use cases.
+We also have some <a href="http://sheetjs.com/demos/">more public demos</a>
+
+This demo shows a sample Vue component "html-preview" that:
+- displays a file input that accepts a spreadsheet file
+- draws the first worksheet of a submitted file as HTML
+- presents an export button to generate XLSX files
+
+<a href="https://obamawhitehouse.archives.gov/sites/default/files/omb/budget/fy2014/assets/receipts.xls">Sample Spreadsheet</a>
+</pre>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<div id="app">
+	<html-preview></html-preview>
+</div>
+
+<script lang="javascript">
+var app = new Vue({ el: '#app' });
+</script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="core.out.js"></script>
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './coreworker.js'
+};
+</script>
+<script src="app.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="full.out.js"></script>
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './fullworker.js'
+};
+</script>
+<script src="app.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<script src="main.min.js"></script>
+<script>
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './mainworker.js'
+};
+</script>
+<script src="app.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br/><div id="fileurl"></div>
+</pre>
+<div id="htmlout"></div>
+<br />
+<button id="ulbutton">Click here to upload the modified table</button>
+<pre>
+<div id="outfile"></div>
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+var demo = 'axios', book = 'xlsx';
+
+function process_wb(wb) {
+	console.log(wb);
+	htmlout.innerHTML = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], {editable:true}).replace("<table", '<table id="table" border="1"');
+}
+
+var url = "sheetjs.xlsx";
+document.getElementById('fileurl').innerHTML = '<a href="' + url + '">Download original file</a>';
+document.getElementById('outfile').innerHTML = '<a href="' + demo + '.' + book + '">Download new file</a>';
+
+axios(url, {responseType:'arraybuffer'}).then(function(res) {
+		var data = new Uint8Array(res.data);
+		var wb = XLSX.read(data, {type:"array"});
+		process_wb(wb);
+});
+
+document.getElementById('ulbutton').onclick = function() {
+	var wb = XLSX.utils.table_to_book(document.getElementById('htmlout'));
+	console.log(wb);
+	var fd = new FormData();
+	var data = XLSX.write(wb, {bookType:book, type:'array'});
+	console.log(data);
+	fd.append('data', new File([data], demo + '.' + book));
+	axios("/upload", {method: "POST", data: fd});
+};
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br/><div id="fileurl"></div>
+</pre>
+<div id="htmlout"></div>
+<br />
+<button id="ulbutton">Click here to upload the modified table</button>
+<pre>
+<div id="outfile"></div>
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script>
+var demo = 'fetch', book = 'xlsx';
+
+if(!window.fetch)
+	throw new Error("This demo is not supported in your browser");
+
+function process_wb(wb) {
+	console.log(wb);
+	htmlout.innerHTML = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], {editable:true}).replace("<table", '<table id="table" border="1"');
+}
+
+var url = "sheetjs.xlsx";
+document.getElementById('fileurl').innerHTML = '<a href="' + url + '">Download original file</a>';
+document.getElementById('outfile').innerHTML = '<a href="' + demo + '.' + book + '">Download new file</a>';
+
+fetch(url).then(function(res) {
+	if(!res.ok) throw new Error("fetch failed");
+	return res.arrayBuffer();
+}).then(function(ab) {
+	var data = new Uint8Array(ab);
+	var wb = XLSX.read(data, {type:"array"});
+	process_wb(wb);
+});
+
+document.getElementById('ulbutton').onclick = function() {
+	var wb = XLSX.utils.table_to_book(document.getElementById('htmlout'));
+	console.log(wb);
+	var fd = new FormData();
+	var data = XLSX.write(wb, {bookType:book, type:'array'});
+	console.log(data);
+	fd.append('data', new File([data], demo + '.' + book));
+	fetch("/upload", {method: "POST", body: fd}).then(function(r) { return r.text(); }).then(function(t) { console.log(t); });
+};
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br/><div id="fileurl"></div>
+</pre>
+<div id="htmlout"></div>
+<br />
+<button id="ulbutton">Click here to upload the modified table</button>
+<pre>
+<div id="outfile"></div>
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script src="https://unpkg.com/superagent/superagent.js"></script>
+<script>
+var demo = 'superagent', book = 'xlsx';
+
+function process_wb(wb) {
+	console.log(wb);
+	htmlout.innerHTML = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], {editable:true}).replace("<table", '<table id="table" border="1"');
+}
+
+var url = "sheetjs.xlsx";
+document.getElementById('fileurl').innerHTML = '<a href="' + url + '">Download original file</a>';
+document.getElementById('outfile').innerHTML = '<a href="' + demo + '.' + book + '">Download new file</a>';
+
+superagent.get(url)
+	.responseType('arraybuffer')
+	.end(function(err, res) {
+		var data = new Uint8Array(res.body);
+		var wb = XLSX.read(data, {type:"array"});
+		process_wb(wb);
+	});
+
+document.getElementById('ulbutton').onclick = function() {
+	var wb = XLSX.utils.table_to_book(document.getElementById('htmlout'));
+	console.log(wb);
+	var fd = new FormData();
+	var data = XLSX.write(wb, {bookType:book, type:'array'});
+	console.log(data);
+	fd.append('data', new File([data], demo + '.' + book));
+	superagent.post("/upload").send(fd).end(function(e,r) { console.log(r.text); });
+};
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+<br/><div id="fileurl"></div>
+</pre>
+<div id="htmlout"></div>
+<br />
+<button id="ulbutton">Click here to upload the modified table</button>
+<pre>
+<div id="outfile"></div>
+</pre>
+<script src="xlsx.full.min.js"></script>
+<script>
+var demo = 'xhr', book = 'xlsx';
+
+if(!window.XMLHttpRequest || typeof Uint8Array === 'undefined')
+	throw new Error("This demo is not supported in your browser");
+
+function process_wb(wb) {
+	console.log(wb);
+	htmlout.innerHTML = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], {editable:true}).replace("<table", '<table id="table" border="1"');
+}
+
+var url = "sheetjs.xlsx";
+document.getElementById('fileurl').innerHTML = '<a href="' + url + '">Download original file</a>';
+document.getElementById('outfile').innerHTML = '<a href="' + demo + '.' + book + '">Download new file</a>';
+
+{
+	var req = new XMLHttpRequest();
+	req.open("GET", url, true);
+	req.responseType = "arraybuffer";
+	req.onload = function(e) {
+		var data = new Uint8Array(req.response);
+		var wb = XLSX.read(data, {type:"array"});
+		process_wb(wb);
+	};
+	req.send();
+}
+
+document.getElementById('ulbutton').onclick = function() {
+	var wb = XLSX.utils.table_to_book(document.getElementById('htmlout'));
+	console.log(wb);
+	var fd = new FormData();
+	var data = XLSX.write(wb, {bookType:book, type:'array'});
+	console.log(data);
+	fd.append('data', new File([data], demo + '.' + book));
+	var req = new XMLHttpRequest();
+	req.open("POST", "/upload", true);
+	req.send(fd);
+};
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>SheetJS Live Demo</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#b64data{
+	width:100%;
+}
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
+(Base64 text works back to IE6; drag and drop works back to IE10)
+
+<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
+<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
+Output Format: <select name="format" onchange="setfmt()">
+<option value="csv" selected> CSV</option>
+<option value="json"> JSON</option>
+<option value="form"> FORMULAE</option>
+<option value="html"> HTML</option>
+</select><br />
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+
+<textarea id="b64data">... or paste a base64-encoding here</textarea>
+<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b>Advanced Demo Options:</b>
+Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+</pre>
+<pre id="out"></pre>
+<div id="htmlout"></div>
+<br />
+<!-- uncomment the next line here and in xlsxworker.js for encoding support -->
+<script src="dist/cpexcel.js"></script>
+<script src="shim.js"></script>
+<script src="jszip.js"></script>
+<script src="xlsx.js"></script>
+<script>
+/*jshint browser:true */
+/* eslint-env browser */
+/*global Uint8Array, console */
+/*global XLSX */
+/* exported b64it, setfmt */
+/* eslint no-use-before-define:0 */
+var X = XLSX;
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	worker: './xlsxworker.js'
+};
+
+var global_wb;
+
+var process_wb = (function() {
+	var OUT = document.getElementById('out');
+	var HTMLOUT = document.getElementById('htmlout');
+
+	var get_format = (function() {
+		var radios = document.getElementsByName( "format" );
+		return function() {
+			for(var i = 0; i < radios.length; ++i) if(radios[i].checked || radios.length === 1) return radios[i].value;
+		};
+	})();
+
+	var to_json = function to_json(workbook) {
+		var result = {};
+		workbook.SheetNames.forEach(function(sheetName) {
+			var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {header:1});
+			if(roa.length) result[sheetName] = roa;
+		});
+		return JSON.stringify(result, 2, 2);
+	};
+
+	var to_csv = function to_csv(workbook) {
+		var result = [];
+		workbook.SheetNames.forEach(function(sheetName) {
+			var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+			if(csv.length){
+				result.push("SHEET: " + sheetName);
+				result.push("");
+				result.push(csv);
+			}
+		});
+		return result.join("\n");
+	};
+
+	var to_fmla = function to_fmla(workbook) {
+		var result = [];
+		workbook.SheetNames.forEach(function(sheetName) {
+			var formulae = X.utils.get_formulae(workbook.Sheets[sheetName]);
+			if(formulae.length){
+				result.push("SHEET: " + sheetName);
+				result.push("");
+				result.push(formulae.join("\n"));
+			}
+		});
+		return result.join("\n");
+	};
+
+	var to_html = function to_html(workbook) {
+		HTMLOUT.innerHTML = "";
+		workbook.SheetNames.forEach(function(sheetName) {
+			var htmlstr = X.write(workbook, {sheet:sheetName, type:'string', bookType:'html'});
+			HTMLOUT.innerHTML += htmlstr;
+		});
+		return "";
+	};
+
+	return function process_wb(wb) {
+		global_wb = wb;
+		var output = "";
+		switch(get_format()) {
+			case "form": output = to_fmla(wb); break;
+			case "html": output = to_html(wb); break;
+			case "json": output = to_json(wb); break;
+			default: output = to_csv(wb);
+		}
+		if(OUT.innerText === undefined) OUT.textContent = output;
+		else OUT.innerText = output;
+		if(typeof console !== 'undefined') console.log("output", new Date());
+	};
+})();
+
+var setfmt = window.setfmt = function setfmt() { if(global_wb) process_wb(global_wb); };
+
+var b64it = window.b64it = (function() {
+	var tarea = document.getElementById('b64data');
+	return function b64it() {
+		if(typeof console !== 'undefined') console.log("onload", new Date());
+		var wb = X.read(tarea.value, {type:'base64', WTF:false});
+		process_wb(wb);
+	};
+})();
+
+var do_file = (function() {
+	var rABS = typeof FileReader !== "undefined" && (FileReader.prototype||{}).readAsBinaryString;
+	var domrabs = document.getElementsByName("userabs")[0];
+	if(!rABS) domrabs.disabled = !(domrabs.checked = false);
+
+	var use_worker = typeof Worker !== 'undefined';
+	var domwork = document.getElementsByName("useworker")[0];
+	if(!use_worker) domwork.disabled = !(domwork.checked = false);
+
+	var xw = function xw(data, cb) {
+		var worker = new Worker(XW.worker);
+		worker.onmessage = function(e) {
+			switch(e.data.t) {
+				case 'ready': break;
+				case 'e': console.error(e.data.d); break;
+				case XW.msg: cb(JSON.parse(e.data.d)); break;
+			}
+		};
+		worker.postMessage({d:data,b:rABS?'binary':'array'});
+	};
+
+	return function do_file(files) {
+		rABS = domrabs.checked;
+		use_worker = domwork.checked;
+		var f = files[0];
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			if(typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+			var data = e.target.result;
+			if(!rABS) data = new Uint8Array(data);
+			if(use_worker) xw(data, process_wb);
+			else process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+		};
+		if(rABS) reader.readAsBinaryString(f);
+		else reader.readAsArrayBuffer(f);
+	};
+})();
+
+(function() {
+	var drop = document.getElementById('drop');
+	if(!drop.addEventListener) return;
+
+	function handleDrop(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		do_file(e.dataTransfer.files);
+	}
+
+	function handleDragover(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}
+
+	drop.addEventListener('dragenter', handleDragover, false);
+	drop.addEventListener('dragover', handleDragover, false);
+	drop.addEventListener('drop', handleDrop, false);
+})();
+
+(function() {
+	var xlf = document.getElementById('xlf');
+	if(!xlf.addEventListener) return;
+	function handleFile(e) { do_file(e.target.files); }
+	xlf.addEventListener('change', handleFile, false);
+})();
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JS-XLSX Core Test Runner</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="mocha.css" />
+    <link rel="icon" type="image/png" href="//oss.sheetjs.com/assets/img/logo.png" />
+    <style>
+      #t { font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; font-weight: bold; }
+      #tt{ font: 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; }
+      th { font: 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; font-weight: bold; text-align: left; }
+    </style>
+  </head>
+  <body>
+    <h1 id="t"><a href="http://sheetjs.com">JS-XLSX Browser-based Parsing Tests</a></h1>
+    <table id="tt">
+      <tr>
+        <th>File Formats</th>
+        <td><a href="http://github.com/SheetJS/js-xlsx">Library Source</a></td>
+        <td><a href="http://SheetJS.github.io/js-xls">Interactive Demo</a></td>
+        <td><a href="http://npm.im/xlsx">"xlsx" on npm</a></td>
+        <td><a href="https://travis-ci.org/SheetJS/js-xlsx">node CI status</a></td>
+      </tr>
+      <tr><td colspan="5">Tests compiled from <a href="http://github.com/SheetJS/test_files">test_files repo</a> and are located at /test_files<br /></td></tr>
+    </table>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+    <script src="shim.js"></script>
+    <script src="base64.js"></script>
+    <script src="fs_.js"></script>
+    <script src="fixtures.js"></script>
+    <script src="xlsx.full.min.js"></script>
+    <div id="mocha"></div>
+    <script src="mocha.js"></script>
+    <script>
+      window.initMochaPhantomJS && window.initMochaPhantomJS();
+      mocha.setup({ui:'bdd', timeout:15000});
+    </script>
+    <script src="core.js"></script>
+    <script>
+      if(typeof mochaSaucePlease !== "undefined") mochaSaucePlease();
+      else if(window.mochaPhantomJS) mochaPhantomJS.run();
+      else typeof mocha_sauce !== 'undefined' ? mocha_sauce() : mocha.run();
+    </script>
+  </body>
+</html>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JS-XLSX Core Test Runner</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="mocha.css" />
+    <link rel="icon" type="image/png" href="//oss.sheetjs.com/assets/img/logo.png" />
+    <style>
+      #t { font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; font-weight: bold; }
+      #tt{ font: 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; }
+      th { font: 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0px 60px; font-weight: bold; text-align: left; }
+    </style>
+  </head>
+  <body>
+    <h1 id="t"><a href="http://sheetjs.com">JS-XLSX Browser-based Parsing Tests</a></h1>
+    <table id="tt">
+      <tr>
+        <th>File Formats</th>
+        <td><a href="http://github.com/SheetJS/js-xlsx">Library Source</a></td>
+        <td><a href="http://SheetJS.github.io/js-xls">Interactive Demo</a></td>
+        <td><a href="http://npm.im/xlsx">"xlsx" on npm</a></td>
+        <td><a href="https://travis-ci.org/SheetJS/js-xlsx">node CI status</a></td>
+      </tr>
+      <tr><td colspan="5">Tests compiled from <a href="http://github.com/SheetJS/test_files">test_files repo</a> and are located at /test_files<br /></td></tr>
+    </table>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-36810333-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+    <script src="shim.js"></script>
+    <script src="base64.js"></script>
+    <script src="fs_.js"></script>
+    <script src="fixtures.js"></script>
+    <script src="xlsx.full.min.js"></script>
+    <div id="mocha"></div>
+    <script src="sauce-client.js"></script>
+    <script src="mocha.js"></script>
+    <script>
+      window.initMochaPhantomJS && window.initMochaPhantomJS();
+      mocha.setup({ui:'bdd', timeout:15000});
+    </script>
+    <script src="core.js"></script>
+    <script>
+      if(typeof mochaSaucePlease !== "undefined") mochaSaucePlease();
+      else if(window.mochaPhantomJS) mochaPhantomJS.run();
+      else typeof mocha_sauce !== 'undefined' ? mocha_sauce() : mocha.run();
+    </script>
+  </body>
+</html>
+
+<!DOCTYPE html>
+<!-- (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+<head>
+<title>SheetJS JS-XLSX In-Browser Export Demo</title>
+<meta charset="utf-8" />
+<style>
+a { text-decoration: none }
+</style>
+</head>
+<body>
+<pre>
+<h3><a href="//sheetjs.com/">SheetJS</a> JS-XLSX In-Browser Export Demo</h3>
+<b>Example Code</b>
+
+  /* Generate Workbook */
+  var wb = XLSX.utils.book_new();
+  var ws = XLSX.utils.aoa_to_sheet([["a","b"],[1,2,3]]);
+  XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+
+  /* Trigger Download with `writeFile` */
+  XLSX.writeFile(wb, "SheetJS.xlsb", {compression:true});
+
+<b>Download Generation Methods:</b>
+
+- IE6-9 require ActiveX and Windows Script support.
+    The IE_SaveFile function from the included shim uses VBScript.
+
+- IE10-11 use msSaveBlob API.
+
+- When supported, `saveAs` will be used.
+
+- When available, modern browsers use `URL.createObjectURL`.
+
+<b>Multiple Download Caveat</b>
+
+Some browsers warn or block attempts to download multiple files.  Chrome content
+settings support whitelisting domains for automatic multiple downloads.
+</pre>
+<script src="shim.js"></script>
+<script src="xlsx.full.min.js"></script>
+<script src="write.js"></script>
+</body>
+
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>xlxs-merger</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="xlsx-merger">
+		<meta name="author" content="Shrey Dixit">
+		<!-- link rel="shortcut icon" href="img/favicon.png" -->
+		
+		<link rel="stylesheet" href="css/dependencies.css"/>
+		
+		<link rel="stylesheet" href="css/app.min.css"/>
+		
+	</head>	
+	<body ng-cloak>		
+
+		<div>
+
+			<div ng-view></div>
+
+		</div>
+		
+
+		<script src="js/dependencies.js"></script>
+		
+		<script src="js/app.min.js"></script>
+			</body>
+</html>
+
+<md-content style="height: 100vh;overflow-y: auto;">
+	<section>
+		<md-subheader class="md-primary">
+			<md-toolbar class="padding-2">
+				<span class="font-size-1-5">Merge Sheets</span>
+			</md-toolbar>
+		</md-subheader>
+		<div class="padding-1">	
+			<md-card class="padding-0"> 	
+			<div>
+			  <md-nav-bar          
+			    md-no-ink-bar="disableInkBar"
+			    md-selected-nav-item="viewType"
+			    nav-bar-aria-label="navigation links"
+			    >
+			    <md-nav-item 
+			    ng-repeat="sheet in arrayOfFiles track by $index" 
+			    md-nav-click="viewType = sheet.fileIndex" 
+			    name="{{sheet.fileIndex}}" 
+			    >
+			    	<div style="position: relative;">	  
+				    	<md-icon class="material-icons margin-0">insert_drive_file</md-icon>
+						<span class="font-size-0-75">{{sheet.name | limitTo : 25}}</span>	
+						<span ng-if="sheet.name.length > 25">...</span>  
+						<label 
+						ng-if="sheet.selectedHeaders.length" 
+						class="badge badge-info" 
+						style="position: absolute;right: -8px;top: -8px;">
+							{{sheet.selectedHeaders.length}}
+						</label>    
+					</div>
+			    </md-nav-item>
+			    <md-nav-item 	    
+			    md-nav-click="viewType = 'addFile'" 
+			    name="addFile">
+			     <md-icon class="material-icons margin-0">add</md-icon> add New File
+			    </md-nav-item>	            
+			  </md-nav-bar>
+			</div>
+			<div 
+			ng-repeat="sheet in arrayOfFiles track by $index" 
+			ng-show="viewType == sheet.fileIndex">		
+				<div class="padding-1">					
+					<h5>selected columns <em>(click on the header of table or search from available headers below)</em> : </h5>
+					<div>								
+						<md-chips 
+						ng-model="sheet.selectedHeaders" 
+						md-autocomplete-snap	
+						ng-change="buildFinalHeaders()"			
+						md-require-match="true">
+							<md-autocomplete
+							  md-selected-item="sheet.selectedItem"
+							  md-search-text="sheet.searchHeader"
+							  md-items="item in querySearch(sheet.searchHeader,sheet.headers,sheet.selectedHeaders)"
+							  md-item-text="item"
+							  md-min-length = "0"
+							  md-no-cache = "true"
+							  placeholder="Search for a header">
+								<span md-highlight-text="searchHeader">{{item}}</span>
+							</md-autocomplete>
+							<md-chip-template>
+								<span>
+								 	<strong>{{$chip}}</strong>				  
+								</span>
+							</md-chip-template>
+						</md-chips>
+					</div>					
+				</div>
+				<md-divider></md-divider>	
+
+				<!-- <md-card> -->
+					<div class="table-responsive padding-1">	
+						<table class="table table-bordered table-hover table-striped mb-0">
+							<thead class="thead-dark">
+								<th 
+								ng-repeat="header in sheet.headers track by $index"
+								ng-mouseenter="hoverColumn(sheet.hoverHeader,$index,true);"
+								ng-mouseleave="hoverColumn(sheet.hoverHeader,$index,false);" 
+								ng-click="toggleSelection(sheet.selectedHeaders,header)"
+								md-colors="sheet.hoverHeader[$index] === true?
+								{background:'grey-500-1'}:
+								sheet.selectedHeaders.indexOf(header)>-1?{background:'green-200-1'}:{}"
+								class="pointer"					
+								>	
+								<div layout="row">
+									<md-icon ng-if="sheet.selectedHeaders.indexOf(header)>-1" class="material-icons md-primary margin-0">check_circle</md-icon>		
+									<span>{{header}}</span>
+								</div>		
+								</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in sheet.data | limitTo : 4 track by $index">
+									<td 
+									ng-repeat="header in sheet.headers track by $index"
+									ng-class="{'td-background' : hoverHeader[$index] === true || selectedHeaders.indexOf(header)>-1}"
+									md-colors="sheet.hoverHeader[$index] === true?{background:'grey-300-0.7'}:sheet.selectedHeaders.indexOf(header)>-1?{background:'green-100-0.8'}:{}"
+									>
+										{{row[header]}}						
+									</td>
+								</tr>
+								<tr>
+									<td colspan="{{sheet.headers.length-1}}">
+										<p>showing only 4 rows.There are <strong>{{sheet.data.length}}</strong> more rows</p>
+									</td>
+									<td>
+										<a href="">show</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>	
+					</div>
+				<!-- </md-card> -->
+			</div>
+			<div ng-show="viewType == 'addFile'" class="pt-3">		
+				<div layout="row" layout-align="center center">		
+					<choose-file layout="row" file-name="selectedFile">				
+						<input 
+						id="fileInput" 
+						type="file" 
+						class="ng-hide" 
+						import-sheet-js="" 
+						multiple="false" 
+						array-of-files="arrayOfFiles" 				
+						data="data"
+						headers="headers"
+						view-type="viewType"/>
+						<md-input-container flex class="md-block">
+							<input type="text" ng-model="selectedFile.name" disabled>
+							<div class="hint">Select your file</div>
+						</md-input-container>
+						<div>
+							<md-button id="uploadButton" class="md-icon-button md-raised md-default">
+							 <md-icon class="material-icons">attach_file</md-icon>
+							</md-button>
+						</div>
+					</choose-file> 	
+				</div>
+				<div layout="row" layout-align="center center">
+					<div class="col-md-6">
+						<md-divider></md-divider>
+						<p class="bold">How It Works :</p>
+						<p>Its a utility app to create an xlsx file from selective columns of different xlsx files.</p>
+						<p>Upload 'n' number of files and the app will create 'n' tabs dedicated to each uploaded file</p>
+						<p>From there you can select the desired columns you want to retain in your consolidated xlsx file</p>
+						<p>You can also set the order of header you have selected from different files.</p>
+					</div>
+				</div>	
+			</div>
+			</md-card>
+			<md-card ng-show="viewType!='addFile'">
+				<md-card-header class="padding-0">
+					<md-toolbar class="md-primary padding-1" style="min-height: 0px;" layout="row" layout-align="space-between center">
+						<span class="font-size-1-5">Final Sheet</span>
+						<md-button ng-disabled="downloadLoading || !finalHeaders.length" ng-click="download()" class="md-icon-button">
+							<md-icon class="material-icons">file_download</md-icon>
+						</md-button>
+					</md-toolbar>					
+				</md-card-header>
+				<md-divider></md-divider>
+				<md-card-content>
+					<table class="table table-striped">
+					  	<tbody>
+						    <tr>
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Headers</h5>
+						        <em ng-if="finalHeaders.length">Drag and drop to set an order</em>
+						      </td>
+						      <td class="padding-1-5"> 
+						      	<h5 ng-if="!finalHeaders.length">No Headers selected yet</h5>             
+								<md-chips
+								ng-if="finalHeaders.length" 
+								ng-model="finalHeaders" 
+								name="finalHeaders" 
+								readonly="true"
+							    md-removable="false" 					    
+							    placeholder="final sheet headers"
+							    class="draggable-chips">
+							        <md-chip-template>					        	
+										<strong md-chip-draggable>{{$chip.header}} <em>({{$chip.sheet}})</em></strong>
+							        </md-chip-template>
+							      </md-chips>			        
+						      </td>
+						    </tr>
+						    <tr>
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Select File Type</h5>
+						      </td>
+						      <td class="padding-1-5">              
+								<md-select placeholder="e.g xlsx" ng-model="fileType" class="margin-0 col-md-3 col-lg-3 text-center">
+								  <md-option value="csv">csv</md-option>                  
+								  <md-option value="xlsx">xlsx</md-option>
+								  <md-option value="txt">txt</md-option>
+								</md-select>		        
+						      </td>
+						    </tr>
+						    <tr ng-if="fileType == 'txt'">
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Delimiter</h5>
+						      </td>
+						      <td class="padding-1-5">              
+								<md-select placeholder="e.g * |" ng-model="delimiter" class="margin-0 col-md-3 col-lg-3 text-center">
+								  <md-option value="*">*</md-option>                  
+								  <md-option value="|">|</md-option>						  
+								</md-select>		        
+						      </td>
+						    </tr>
+						</tbody>
+					</table>			
+				</md-card-content>
+				<md-progress-linear md-mode="indeterminate" ng-if="downloadLoading"></md-progress-linear>
+				<md-divider></md-divider>
+				<md-card-footer layout="row" layout-align="end center">
+					<md-button ng-disabled="downloadLoading || !finalHeaders.length" class="md-primary md-raised" ng-click="download()">	<md-icon class="material-icons">file_download</md-icon>
+						download
+					</md-button>
+				</md-card-footer>
+			</md-card>
+		</div>      
+    </section>
+</md-content>

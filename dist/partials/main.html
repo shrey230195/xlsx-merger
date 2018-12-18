@@ -1,0 +1,220 @@
+<md-content style="height: 100vh;overflow-y: auto;">
+	<section>
+		<md-subheader class="md-primary">
+			<md-toolbar class="padding-2">
+				<span class="font-size-1-5">Merge Sheets</span>
+			</md-toolbar>
+		</md-subheader>
+		<div class="padding-1">	
+			<md-card class="padding-0"> 	
+			<div>
+			  <md-nav-bar          
+			    md-no-ink-bar="disableInkBar"
+			    md-selected-nav-item="viewType"
+			    nav-bar-aria-label="navigation links"
+			    >
+			    <md-nav-item 
+			    ng-repeat="sheet in arrayOfFiles track by $index" 
+			    md-nav-click="viewType = sheet.fileIndex" 
+			    name="{{sheet.fileIndex}}" 
+			    >
+			    	<div style="position: relative;">	  
+				    	<md-icon class="material-icons margin-0">insert_drive_file</md-icon>
+						<span class="font-size-0-75">{{sheet.name | limitTo : 25}}</span>	
+						<span ng-if="sheet.name.length > 25">...</span>  
+						<label 
+						ng-if="sheet.selectedHeaders.length" 
+						class="badge badge-info" 
+						style="position: absolute;right: -8px;top: -8px;">
+							{{sheet.selectedHeaders.length}}
+						</label>    
+					</div>
+			    </md-nav-item>
+			    <md-nav-item 	    
+			    md-nav-click="viewType = 'addFile'" 
+			    name="addFile">
+			     <md-icon class="material-icons margin-0">add</md-icon> add New File
+			    </md-nav-item>	            
+			  </md-nav-bar>
+			</div>
+			<div 
+			ng-repeat="sheet in arrayOfFiles track by $index" 
+			ng-show="viewType == sheet.fileIndex">		
+				<div class="padding-1">					
+					<h5>selected columns <em>(click on the header of table or search from available headers below)</em> : </h5>
+					<div>								
+						<md-chips 
+						ng-model="sheet.selectedHeaders" 
+						md-autocomplete-snap	
+						ng-change="buildFinalHeaders()"			
+						md-require-match="true">
+							<md-autocomplete
+							  md-selected-item="sheet.selectedItem"
+							  md-search-text="sheet.searchHeader"
+							  md-items="item in querySearch(sheet.searchHeader,sheet.headers,sheet.selectedHeaders)"
+							  md-item-text="item"
+							  md-min-length = "0"
+							  md-no-cache = "true"
+							  placeholder="Search for a header">
+								<span md-highlight-text="searchHeader">{{item}}</span>
+							</md-autocomplete>
+							<md-chip-template>
+								<span>
+								 	<strong>{{$chip}}</strong>				  
+								</span>
+							</md-chip-template>
+						</md-chips>
+					</div>					
+				</div>
+				<md-divider></md-divider>	
+
+				<!-- <md-card> -->
+					<div class="table-responsive padding-1">	
+						<table class="table table-bordered table-hover table-striped mb-0">
+							<thead class="thead-dark">
+								<th 
+								ng-repeat="header in sheet.headers track by $index"
+								ng-mouseenter="hoverColumn(sheet.hoverHeader,$index,true);"
+								ng-mouseleave="hoverColumn(sheet.hoverHeader,$index,false);" 
+								ng-click="toggleSelection(sheet.selectedHeaders,header)"
+								md-colors="sheet.hoverHeader[$index] === true?
+								{background:'grey-500-1'}:
+								sheet.selectedHeaders.indexOf(header)>-1?{background:'green-200-1'}:{}"
+								class="pointer"					
+								>	
+								<div layout="row">
+									<md-icon ng-if="sheet.selectedHeaders.indexOf(header)>-1" class="material-icons md-primary margin-0">check_circle</md-icon>		
+									<span>{{header}}</span>
+								</div>		
+								</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in sheet.data | limitTo : 4 track by $index">
+									<td 
+									ng-repeat="header in sheet.headers track by $index"
+									ng-class="{'td-background' : hoverHeader[$index] === true || selectedHeaders.indexOf(header)>-1}"
+									md-colors="sheet.hoverHeader[$index] === true?{background:'grey-300-0.7'}:sheet.selectedHeaders.indexOf(header)>-1?{background:'green-100-0.8'}:{}"
+									>
+										{{row[header]}}						
+									</td>
+								</tr>
+								<tr>
+									<td colspan="{{sheet.headers.length-1}}">
+										<p>showing only 4 rows.There are <strong>{{sheet.data.length}}</strong> more rows</p>
+									</td>
+									<td>
+										<a href="">show</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>	
+					</div>
+				<!-- </md-card> -->
+			</div>
+			<div ng-show="viewType == 'addFile'" class="pt-3">		
+				<div layout="row" layout-align="center center">		
+					<choose-file layout="row" file-name="selectedFile">				
+						<input 
+						id="fileInput" 
+						type="file" 
+						class="ng-hide" 
+						import-sheet-js="" 
+						multiple="false" 
+						array-of-files="arrayOfFiles" 				
+						data="data"
+						headers="headers"
+						view-type="viewType"/>
+						<md-input-container flex class="md-block">
+							<input type="text" ng-model="selectedFile.name" disabled>
+							<div class="hint">Select your file</div>
+						</md-input-container>
+						<div>
+							<md-button id="uploadButton" class="md-icon-button md-raised md-default">
+							 <md-icon class="material-icons">attach_file</md-icon>
+							</md-button>
+						</div>
+					</choose-file> 	
+				</div>
+				<div layout="row" layout-align="center center">
+					<div class="col-md-6">
+						<md-divider></md-divider>
+						<p class="bold">How It Works :</p>
+						<p>Its a utility app to create an xlsx file from selective columns of different xlsx files.</p>
+						<p>Upload 'n' number of files and the app will create 'n' tabs dedicated to each uploaded file</p>
+						<p>From there you can select the desired columns you want to retain in your consolidated xlsx file</p>
+						<p>You can also set the order of header you have selected from different files.</p>
+					</div>
+				</div>	
+			</div>
+			</md-card>
+			<md-card ng-show="viewType!='addFile'">
+				<md-card-header class="padding-0">
+					<md-toolbar class="md-primary padding-1" style="min-height: 0px;" layout="row" layout-align="space-between center">
+						<span class="font-size-1-5">Final Sheet</span>
+						<md-button ng-disabled="downloadLoading || !finalHeaders.length" ng-click="download()" class="md-icon-button">
+							<md-icon class="material-icons">file_download</md-icon>
+						</md-button>
+					</md-toolbar>					
+				</md-card-header>
+				<md-divider></md-divider>
+				<md-card-content>
+					<table class="table table-striped">
+					  	<tbody>
+						    <tr>
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Headers</h5>
+						        <em ng-if="finalHeaders.length">Drag and drop to set an order</em>
+						      </td>
+						      <td class="padding-1-5"> 
+						      	<h5 ng-if="!finalHeaders.length">No Headers selected yet</h5>             
+								<md-chips
+								ng-if="finalHeaders.length" 
+								ng-model="finalHeaders" 
+								name="finalHeaders" 
+								readonly="true"
+							    md-removable="false" 					    
+							    placeholder="final sheet headers"
+							    class="draggable-chips">
+							        <md-chip-template>					        	
+										<strong md-chip-draggable>{{$chip.header}} <em>({{$chip.sheet}})</em></strong>
+							        </md-chip-template>
+							      </md-chips>			        
+						      </td>
+						    </tr>
+						    <tr>
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Select File Type</h5>
+						      </td>
+						      <td class="padding-1-5">              
+								<md-select placeholder="e.g xlsx" ng-model="fileType" class="margin-0 col-md-3 col-lg-3 text-center">
+								  <md-option value="csv">csv</md-option>                  
+								  <md-option value="xlsx">xlsx</md-option>
+								  <md-option value="txt">txt</md-option>
+								</md-select>		        
+						      </td>
+						    </tr>
+						    <tr ng-if="fileType == 'txt'">
+						      <td class="col-md-2 col-xs-2 padding-1-5 border-right-grey transition-all-0-2">
+						        <h5 class="text-right bold">Delimiter</h5>
+						      </td>
+						      <td class="padding-1-5">              
+								<md-select placeholder="e.g * |" ng-model="delimiter" class="margin-0 col-md-3 col-lg-3 text-center">
+								  <md-option value="*">*</md-option>                  
+								  <md-option value="|">|</md-option>						  
+								</md-select>		        
+						      </td>
+						    </tr>
+						</tbody>
+					</table>			
+				</md-card-content>
+				<md-progress-linear md-mode="indeterminate" ng-if="downloadLoading"></md-progress-linear>
+				<md-divider></md-divider>
+				<md-card-footer layout="row" layout-align="end center">
+					<md-button ng-disabled="downloadLoading || !finalHeaders.length" class="md-primary md-raised" ng-click="download()">	<md-icon class="material-icons">file_download</md-icon>
+						download
+					</md-button>
+				</md-card-footer>
+			</md-card>
+		</div>      
+    </section>
+</md-content>

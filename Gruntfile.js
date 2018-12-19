@@ -67,31 +67,31 @@ module.exports = function(grunt) {
 		  }
 	  },
 
-	  // verifies we have formatted our js and HTML according to our style conventions
-	  jsbeautifier: {
-		  verify : {
-			  src:   beautifyFiles,
-			  options: {
-				  config: '.jsbeautifyrc',
-				  mode: 'VERIFY_ONLY'
-			  }
-		  },
-		  update: {
-			  src:   beautifyFiles,
-			  options: {
-				  config: '.jsbeautifyrc'
-			  }
-		  }
-	  },
+	  // // verifies we have formatted our js and HTML according to our style conventions
+	  // jsbeautifier: {
+		 //  verify : {
+			//   src:   beautifyFiles,
+			//   options: {
+			// 	  config: '.jsbeautifyrc',
+			// 	  mode: 'VERIFY_ONLY'
+			//   }
+		 //  },
+		 //  update: {
+			//   src:   beautifyFiles,
+			//   options: {
+			// 	  config: '.jsbeautifyrc'
+			//   }
+		 //  }
+	  // },
 
-    // Make sure code styles are up to par and there are no obvious mistakes
-    jshint:       {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
-      },
-      src:     ['src/!(*spec).js']
-    },
+   //  // Make sure code styles are up to par and there are no obvious mistakes
+   //  jshint:       {
+   //    options: {
+   //      jshintrc: '.jshintrc',
+   //      reporter: require('jshint-stylish')
+   //    },
+   //    src:     ['src/!(*spec).js']
+   //  },
 
     // Test settings
     karma:        {

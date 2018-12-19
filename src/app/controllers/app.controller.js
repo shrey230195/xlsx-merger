@@ -16,7 +16,8 @@ angular.module('app')
 
 		$scope.viewType = 'addFile';
 		$scope.fileType = 'xlsx';	
-		$scope.delimiter = '|';		
+		$scope.delimiter = {};		
+		$scope.delimiter.value = '|';		
 		$scope.arrayOfFiles = [];
 
 		buildFinalHeaders();
@@ -82,7 +83,8 @@ angular.module('app')
 			$timeout(function() {
 				$scope.downloadLoading = false;
 				if($scope.fileType == 'txt') {
-					exportSheetJs.downloadTxt(mergedArrays,'mergedSheet.'+$scope.fileType,'sheet1',$scope.delimiter)					
+					console.log($scope.delimiter.value)
+					exportSheetJs.downloadTxt(mergedArrays,'mergedSheet.'+$scope.fileType,'sheet1',$scope.delimiter.value)					
 				}
 				else{
 					exportSheetJs.downloadXlsx(mergedArrays,'mergedSheet.'+$scope.fileType,'sheet1')						
